@@ -4,7 +4,6 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using System.Reactive.Linq;
-using System.Globalization;
 using AutoUpdaterDotNET;
 
 namespace Main_Menu
@@ -12,8 +11,37 @@ namespace Main_Menu
     public partial class Form1 : Form
     {
         string barrel = null;
-        public Form1() {
+        public Form1()
+        {
             InitializeComponent();
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            if (File.Exists(Directory.GetCurrentDirectory() + "\\Settings.ini") || File.Exists(Directory.GetCurrentDirectory() + "\\Dark.ini"))
+            {
+                if (File.Exists(Directory.GetCurrentDirectory() + "\\Settings.ini"))
+                {
+                    var cvt = new FontConverter();
+                    string fontsetting = File.ReadAllText(Directory.GetCurrentDirectory() + "\\Settings.ini");
+                    var PrintFont = cvt.ConvertFrom(fontsetting) as Font;
+                    fontDialog1.Font = PrintFont;
+                    FontSet();
+                }
+                if (File.Exists(Directory.GetCurrentDirectory() + "\\Dark.ini"))
+                {
+                    string dark = File.ReadAllText(Directory.GetCurrentDirectory() + "\\Dark.ini");
+                    if (dark.Contains("DarkEnable"))
+                    {
+                        DarkEnable();
+                    }
+                }
+            }
+            var timer = Observable.Interval(TimeSpan.FromMilliseconds(250));
+            Random rnd = new Random();
+            timer.Subscribe(l => linkLabel1.LinkColor = Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)));
+            timer.Subscribe(l => linkLabel1.VisitedLinkColor = Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)));
+            timer.Subscribe(l => linkLabel1.DisabledLinkColor = Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)));
+            AutoUpdater.Start("https://raw.githubusercontent.com/FromDarkHell/-/master/updates/bl2cpf.xml");
         }
         private void button1_Click_1(object sender, EventArgs e) {
             NewFile.RestoreDirectory = true;
@@ -27,19 +55,6 @@ namespace Main_Menu
                 StreamWriter sw = new StreamWriter(NewFile.FileName);
                 sw.Write(Environment.NewLine);
                 sw.Close();
-            }
-        }
-        private void OpenButton_Click(object sender, EventArgs e)
-        {
-            OpenFile.RestoreDirectory = true;
-            OpenFile.DefaultExt = "txt";
-            OpenFile.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-            OpenFile.Title = "Open BL2 Mod";
-            OpenFile.CheckFileExists = false;
-            OpenFile.CheckPathExists = true;
-            if (OpenFile.ShowDialog() == DialogResult.OK)
-            {
-                string Mod = File.ReadAllText(OpenFile.FileName);
             }
         }
         private void SaveMod_Click(object sender, EventArgs e)
@@ -71,28 +86,29 @@ namespace Main_Menu
                 if (OrigWepName.Text == "12 Pounder")
                 {
                     barrel = "GD_Orchid_BossWeapons.Launcher.L_Barrel_Torgue_12Pounder";
-                    sw.WriteLine("set GD_Orchid_BossWeapons.Name.Title.Title__Unique_12Pounder PartName " + NewWepName.Text + Environment.NewLine);
-                    sw.WriteLine("set GD_Orchid_BossWeapons.Name.Title.Title__Unique_12Pounder:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
+                    if (string.IsNullOrWhiteSpace(OrigWepName.Text))
+                    {
+                        sw.WriteLine("set GD_Orchid_BossWeapons.Name.Title.Title__Unique_12Pounder PartName " + NewWepName.Text + Environment.NewLine);
+                    }
+                    if (string.IsNullOrWhiteSpace(RedText.Text))
+                    {
+                        sw.WriteLine("set GD_Orchid_BossWeapons.Name.Title.Title__Unique_12Pounder:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
+                    }
                     if (FirinMode.Text != null)
                     {
                         sw.WriteLine("set " + barrel + " CustomFiringModeDefinition FiringModeDefinition'" + FirinMode.Text + "'" + Environment.NewLine);
                     }
                 }
-                else if (OrigWepName.Text == "1340 Shield")
-                {
-                    sw.WriteLine("set GD_Shields.Titles.Title_Absorption02_1341 PartName " + NewWepName.Text + Environment.NewLine);
-                    sw.WriteLine("set GD_Shields.Titles.Title_Absorption02_1341:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
-                }
-                else if (OrigWepName.Text == "Aequitas")
-                {
-                    sw.WriteLine("set GD_Shields.Accessory.Title_Absorption03_Aequitas PartName " + NewWepName.Text + Environment.NewLine);
-                    sw.WriteLine("set GD_Shields.Accessory.Title_Absorption03_Aequitas:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
-                }
                 else if (OrigWepName.Text == "Bad Touch")
                 {
                     barrel = "GD_Weap_SMG.Barrel.SMG_Barrel_Maliwan_BadTouch";
-                    sw.WriteLine("set GD_Weap_SMG.Name.Title.Title__Unique_BadTouch PartName " + NewWepName.Text + Environment.NewLine);
-                    sw.WriteLine("set GD_Weap_SMG.Name.Title.Title__Unique_BadTouch:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
+                    if(string.IsNullOrWhiteSpace(OrigWepName.Text))
+                    {
+                        sw.WriteLine("set GD_Weap_SMG.Name.Title.Title__Unique_BadTouch PartName " + NewWepName.Text + Environment.NewLine);
+                    }
+                    if(string.IsNullOrWhiteSpace(RedText.Text)) {
+                        sw.WriteLine("set GD_Weap_SMG.Name.Title.Title__Unique_BadTouch:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
+                    }         
                     if (FirinMode.Text != null)
                     {
                         sw.WriteLine("set " + barrel + " CustomFiringModeDefinition FiringModeDefinition'" + FirinMode.Text + "'" + Environment.NewLine);
@@ -101,8 +117,15 @@ namespace Main_Menu
                 else if (OrigWepName.Text == "Bane")
                 {
                     barrel = "GD_Weap_SMG.Barrel.SMG_Barrel_Dahl_Bane";
-                    sw.WriteLine("set GD_Weap_SMG.Name.Title.Title__Unique_Bane PartName " + NewWepName.Text + Environment.NewLine);
-                    sw.WriteLine("set GD_Weap_SMG.Name.Title.Title__Unique_Bane:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
+                    if (string.IsNullOrWhiteSpace(OrigWepName.Text))
+                    {
+                        sw.WriteLine("set GD_Weap_SMG.Name.Title.Title__Unique_Bane PartName " + NewWepName.Text + Environment.NewLine);
+
+                    }
+                    if (string.IsNullOrWhiteSpace(RedText.Text))
+                    {
+                        sw.WriteLine("set GD_Weap_SMG.Name.Title.Title__Unique_Bane:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
+                    }  
                     if (FirinMode.Text != null)
                     {
                         sw.WriteLine("set " + barrel + " CustomFiringModeDefinition FiringModeDefinition'" + FirinMode.Text + "'" + Environment.NewLine);
@@ -111,8 +134,15 @@ namespace Main_Menu
                 else if (OrigWepName.Text == "Blockhead")
                 {
                     barrel = "GD_Weap_Shotgun.Barrel.SG_Barrel_Tediore_Blockhead";
-                    sw.WriteLine("set GD_Weap_Shotgun.Name.Title.Title__Unique_Blockhead PartName " + NewWepName.Text + Environment.NewLine);
-                    sw.WriteLine("set GD_Weap_Shotgun.Name.Title.Title__Unique_Blockhead:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
+                    if (string.IsNullOrWhiteSpace(OrigWepName.Text))
+                    {
+                        sw.WriteLine("set GD_Weap_Shotgun.Name.Title.Title__Unique_Blockhead PartName " + NewWepName.Text + Environment.NewLine);
+                    }
+                    if (string.IsNullOrWhiteSpace(RedText.Text))
+                    {
+                        sw.WriteLine("set GD_Weap_Shotgun.Name.Title.Title__Unique_Blockhead:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
+                    }
+                        
                     if (FirinMode.Text != null)
                     {
                         sw.WriteLine("set " + barrel + " CustomFiringModeDefinition FiringModeDefinition'" + FirinMode.Text + "'" + Environment.NewLine);
@@ -121,8 +151,15 @@ namespace Main_Menu
                 else if (OrigWepName.Text == "Bone Shredder")
                 {
                     barrel = "GD_Weap_SMG.Barrel.SMG_Barrel_Bandit_BoneShredder";
-                    sw.WriteLine("set GD_Weap_SMG.Name.Title.Title__Unique_BoneShredder PartName " + NewWepName.Text + Environment.NewLine);
-                    sw.WriteLine("set GD_Weap_SMG.Name.Title.Title__Unique_BoneShredder:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
+                    if (string.IsNullOrWhiteSpace(OrigWepName.Text))
+                    {
+                        sw.WriteLine("set GD_Weap_SMG.Name.Title.Title__Unique_BoneShredder PartName " + NewWepName.Text + Environment.NewLine);
+                    }
+                    if (string.IsNullOrWhiteSpace(RedText.Text))
+                    {
+                        sw.WriteLine("set GD_Weap_SMG.Name.Title.Title__Unique_BoneShredder:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
+                    }
+                        
                     if (FirinMode.Text != null)
                     {
                         sw.WriteLine("set " + barrel + " CustomFiringModeDefinition FiringModeDefinition'" + FirinMode.Text + "'" + Environment.NewLine);
@@ -131,8 +168,14 @@ namespace Main_Menu
                 else if (OrigWepName.Text == "Boom Puppy")
                 {
                     barrel = "GD_Iris_Weapons.AssaultRifles.AR_Barrel_Torgue_BoomPuppy";
-                    sw.WriteLine("set GD_Iris_Weapons.Name.Title.Title_Unique_BoomPuppy PartName " + NewWepName.Text + Environment.NewLine);
-                    sw.WriteLine("set GD_Iris_Weapons.Name.Title.Title_Unique_BoomPuppy:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
+                    if (string.IsNullOrWhiteSpace(OrigWepName.Text))
+                    {
+                        sw.WriteLine("set GD_Iris_Weapons.Name.Title.Title_Unique_BoomPuppy PartName " + NewWepName.Text + Environment.NewLine);
+                    }
+                    if (string.IsNullOrWhiteSpace(OrigWepName.Text))
+                    {
+                        sw.WriteLine("set GD_Iris_Weapons.Name.Title.Title_Unique_BoomPuppy:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
+                    }   
                     if (FirinMode.Text != null)
                     {
                         sw.WriteLine("set " + barrel + " CustomFiringModeDefinition FiringModeDefinition'" + FirinMode.Text + "'" + Environment.NewLine);
@@ -197,16 +240,6 @@ namespace Main_Menu
                     {
                         sw.WriteLine("set " + barrel + " CustomFiringModeDefinition FiringModeDefinition'" + FirinMode.Text + "'" + Environment.NewLine);
                     }
-                }
-                else if (OrigWepName.Text == "Contraband Sky Rocket")
-                {
-                    sw.WriteLine("set GD_GrenadeMods.Title.Title_SkyRocket PartName " + NewWepName.Text + Environment.NewLine);
-                    sw.WriteLine("set GD_GrenadeMods.Title.Title_SkyRocket:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
-                }
-                else if (OrigWepName.Text == "Cracked Sash")
-                {
-                    sw.WriteLine("set GD_Shields.Titles.Title_Standard02_CrackedSash PartName " + NewWepName.Text + Environment.NewLine);
-                    sw.WriteLine("set GD_Shields.Titles.Title_Standard02_CrackedSash:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
                 }
                 else if (OrigWepName.Text == "Creamer")
                 {
@@ -314,11 +347,6 @@ namespace Main_Menu
                     {
                         sw.WriteLine("set GD_Weap_Pistol.Name.Title.Title__Unique_Fibber:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text);
                     }
-                }
-                else if (OrigWepName.Text == "Fireball")
-                {
-                    sw.WriteLine("set GD_Aster_GrenadeMods.Title.Title_Fireball PartName " + NewWepName.Text + Environment.NewLine);
-                    sw.WriteLine("set GD_Aster_GrenadeMods.Title.Title_Fireball:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
                 }
                 else if (OrigWepName.Text == "Tinderbox")
                 {
@@ -1387,28 +1415,6 @@ namespace Main_Menu
                 sw.Close();
             }
         }
-        private void Form1_Load(object sender, EventArgs e) 
-        {
-            var timer = Observable.Interval(TimeSpan.FromSeconds(1));
-            Random rnd = new Random();
-            timer.Subscribe(l => linkLabel1.LinkColor = Color.FromArgb(rnd.Next(0,256),rnd.Next(0,256),rnd.Next(0,256)));
-            timer.Subscribe(l => linkLabel1.VisitedLinkColor = Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)));
-            timer.Subscribe(l => linkLabel1.DisabledLinkColor = Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)));
-            if(File.Exists(Directory.GetCurrentDirectory() + "\\Settings.ini"))
-            {
-                var cvt = new FontConverter();
-                string fontsetting = File.ReadAllText(Directory.GetCurrentDirectory() + "\\Settings.ini");
-                string dark = File.ReadAllText(Directory.GetCurrentDirectory() + "\\Dark.ini");
-                var PrintFont = cvt.ConvertFrom(fontsetting) as Font;
-                fontDialog1.Font = PrintFont;
-                FontSet();
-                if(dark.Contains("DarkEnable"))
-                {
-                    DarkEnable();
-                }
-            }
-            AutoUpdater.Start("https://raw.githubusercontent.com/FromDarkHell/-/master/updates/bl2cpf.xml");
-        }
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("http://www.twitch.tv/fromdarkhell");
@@ -1430,36 +1436,6 @@ namespace Main_Menu
                     File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Settings.ini", Beet);
                 }
             }
-        }
-        public void FontSet()
-        {
-            EridiumPickup.Font = fontDialog1.Font;
-            label2.Font = fontDialog1.Font;
-            OrigWepName.Font = fontDialog1.Font;
-            label4.Font = fontDialog1.Font;
-            NewWepName.Font = fontDialog1.Font;
-            label3.Font = fontDialog1.Font;
-            RedText.Font = fontDialog1.Font;
-            label12.Font = fontDialog1.Font;
-            Rarity.Font = fontDialog1.Font;
-            label5.Font = fontDialog1.Font;
-            FirinMode.Font = fontDialog1.Font;
-            label11.Font = fontDialog1.Font;
-            label6.Font = fontDialog1.Font;
-            Attribute.Font = fontDialog1.Font;
-            label7.Font = fontDialog1.Font;
-            AttributeNum.Font = fontDialog1.Font;
-            label10.Font = fontDialog1.Font;
-            label8.Font = fontDialog1.Font;
-            External.Font = fontDialog1.Font;
-            ExternalNum.Font = fontDialog1.Font;
-            label9.Font = fontDialog1.Font;
-            label13.Font = fontDialog1.Font;
-            Gestalt.Font = fontDialog1.Font;
-            label14.Font = fontDialog1.Font;
-            linkLabel1.Font = fontDialog1.Font;
-            label15.Font = fontDialog1.Font;
-            linkLabel2.Font = fontDialog1.Font;
         }
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
@@ -1518,6 +1494,53 @@ namespace Main_Menu
                 File.WriteAllText(Directory.GetCurrentDirectory() + "\\Dark.ini","DarkDisable");
             }
         }
+        private void HexEdit_Click(object sender, EventArgs e)
+        {
+            HexEdit hex = new HexEdit();
+            hex.Show();
+        }
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/AnotherBugworm");
+        }
+        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/AnotherBugworm/Borderlands2Patcher");
+        }
+        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.twitch.tv/lightchaosman");
+        }
+        public void FontSet()
+        {
+            EridiumPickup.Font = fontDialog1.Font;
+            label2.Font = fontDialog1.Font;
+            OrigWepName.Font = fontDialog1.Font;
+            label4.Font = fontDialog1.Font;
+            NewWepName.Font = fontDialog1.Font;
+            label3.Font = fontDialog1.Font;
+            RedText.Font = fontDialog1.Font;
+            label12.Font = fontDialog1.Font;
+            Rarity.Font = fontDialog1.Font;
+            label5.Font = fontDialog1.Font;
+            FirinMode.Font = fontDialog1.Font;
+            label11.Font = fontDialog1.Font;
+            label6.Font = fontDialog1.Font;
+            Attribute.Font = fontDialog1.Font;
+            label7.Font = fontDialog1.Font;
+            AttributeNum.Font = fontDialog1.Font;
+            label10.Font = fontDialog1.Font;
+            label8.Font = fontDialog1.Font;
+            External.Font = fontDialog1.Font;
+            ExternalNum.Font = fontDialog1.Font;
+            label9.Font = fontDialog1.Font;
+            label13.Font = fontDialog1.Font;
+            Gestalt.Font = fontDialog1.Font;
+            label14.Font = fontDialog1.Font;
+            linkLabel1.Font = fontDialog1.Font;
+            label15.Font = fontDialog1.Font;
+            linkLabel2.Font = fontDialog1.Font;
+        }
         public void DarkEnable()
         {
             this.BackColor = Color.Black;
@@ -1543,6 +1566,14 @@ namespace Main_Menu
             label14.ForeColor = Color.White;
             label15.ForeColor = Color.White;
             linkLabel2.LinkColor = Color.White;
+            label18.ForeColor = Color.White;
+            label19.ForeColor = Color.White;
+            label21.ForeColor = Color.White;
+            label20.ForeColor = Color.White;
+            linkLabel3.LinkColor = Color.White;
+            linkLabel4.LinkColor = Color.White;
+            linkLabel5.LinkColor = Color.White;
+            checkBox2.ForeColor = Color.White;
         }
     }
 }

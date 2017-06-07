@@ -32,20 +32,28 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.NewButton = new System.Windows.Forms.Button();
             this.NewFile = new System.Windows.Forms.SaveFileDialog();
-            this.OpenButton = new System.Windows.Forms.Button();
             this.OpenFile = new System.Windows.Forms.OpenFileDialog();
             this.SaveMod = new System.Windows.Forms.Button();
             this.Rainbow = new System.Windows.Forms.Timer(this.components);
             this.fontDialog1 = new System.Windows.Forms.FontDialog();
             this.About = new System.Windows.Forms.TabPage();
+            this.label21 = new System.Windows.Forms.Label();
+            this.linkLabel5 = new System.Windows.Forms.LinkLabel();
+            this.label20 = new System.Windows.Forms.Label();
+            this.linkLabel4 = new System.Windows.Forms.LinkLabel();
+            this.label19 = new System.Windows.Forms.Label();
+            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
+            this.label18 = new System.Windows.Forms.Label();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.label15 = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.label14 = new System.Windows.Forms.Label();
             this.Settings = new System.Windows.Forms.TabPage();
+            this.HexEdit = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
             this.WepBarrel = new System.Windows.Forms.TabPage();
+            this.Zoom = new System.Windows.Forms.ComboBox();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label17 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
@@ -77,7 +85,6 @@
             this.General = new System.Windows.Forms.TabPage();
             this.EridiumPickup = new System.Windows.Forms.CheckBox();
             this.Tabs = new System.Windows.Forms.TabControl();
-            this.Zoom = new System.Windows.Forms.ComboBox();
             this.About.SuspendLayout();
             this.Settings.SuspendLayout();
             this.WepBarrel.SuspendLayout();
@@ -105,19 +112,9 @@
             // 
             this.NewFile.RestoreDirectory = true;
             // 
-            // OpenButton
-            // 
-            this.OpenButton.Location = new System.Drawing.Point(73, 1);
-            this.OpenButton.Name = "OpenButton";
-            this.OpenButton.Size = new System.Drawing.Size(75, 23);
-            this.OpenButton.TabIndex = 1;
-            this.OpenButton.Text = "Open Mod";
-            this.OpenButton.UseVisualStyleBackColor = true;
-            this.OpenButton.Click += new System.EventHandler(this.OpenButton_Click);
-            // 
             // SaveMod
             // 
-            this.SaveMod.Location = new System.Drawing.Point(154, 1);
+            this.SaveMod.Location = new System.Drawing.Point(73, 1);
             this.SaveMod.Name = "SaveMod";
             this.SaveMod.Size = new System.Drawing.Size(75, 23);
             this.SaveMod.TabIndex = 3;
@@ -133,6 +130,13 @@
             // 
             // About
             // 
+            this.About.Controls.Add(this.label21);
+            this.About.Controls.Add(this.linkLabel5);
+            this.About.Controls.Add(this.label20);
+            this.About.Controls.Add(this.linkLabel4);
+            this.About.Controls.Add(this.label19);
+            this.About.Controls.Add(this.linkLabel3);
+            this.About.Controls.Add(this.label18);
             this.About.Controls.Add(this.linkLabel2);
             this.About.Controls.Add(this.label15);
             this.About.Controls.Add(this.linkLabel1);
@@ -144,6 +148,82 @@
             this.About.TabIndex = 4;
             this.About.Text = "About";
             this.About.UseVisualStyleBackColor = true;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Location = new System.Drawing.Point(213, 78);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(132, 20);
+            this.label21.TabIndex = 10;
+            this.label21.Text = "for helping debug";
+            // 
+            // linkLabel5
+            // 
+            this.linkLabel5.AutoSize = true;
+            this.linkLabel5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkLabel5.Location = new System.Drawing.Point(86, 78);
+            this.linkLabel5.Name = "linkLabel5";
+            this.linkLabel5.Size = new System.Drawing.Size(121, 20);
+            this.linkLabel5.TabIndex = 9;
+            this.linkLabel5.TabStop = true;
+            this.linkLabel5.Text = "LightChaosman";
+            this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel5_LinkClicked);
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Location = new System.Drawing.Point(10, 78);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(69, 20);
+            this.label20.TabIndex = 8;
+            this.label20.Text = "Credit to";
+            // 
+            // linkLabel4
+            // 
+            this.linkLabel4.AutoSize = true;
+            this.linkLabel4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkLabel4.Location = new System.Drawing.Point(299, 46);
+            this.linkLabel4.Name = "linkLabel4";
+            this.linkLabel4.Size = new System.Drawing.Size(159, 20);
+            this.linkLabel4.TabIndex = 7;
+            this.linkLabel4.TabStop = true;
+            this.linkLabel4.Text = "Borderlands2Patcher";
+            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(214, 46);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(89, 20);
+            this.label19.TabIndex = 6;
+            this.label19.Text = "for creating";
+            // 
+            // linkLabel3
+            // 
+            this.linkLabel3.AutoSize = true;
+            this.linkLabel3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkLabel3.Location = new System.Drawing.Point(83, 46);
+            this.linkLabel3.Name = "linkLabel3";
+            this.linkLabel3.Size = new System.Drawing.Size(133, 20);
+            this.linkLabel3.TabIndex = 5;
+            this.linkLabel3.TabStop = true;
+            this.linkLabel3.Text = "AnotherBugworm";
+            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label18.Location = new System.Drawing.Point(10, 46);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(69, 20);
+            this.label18.TabIndex = 4;
+            this.label18.Text = "Credit to";
             // 
             // linkLabel2
             // 
@@ -193,6 +273,7 @@
             // 
             // Settings
             // 
+            this.Settings.Controls.Add(this.HexEdit);
             this.Settings.Controls.Add(this.checkBox1);
             this.Settings.Controls.Add(this.button1);
             this.Settings.Location = new System.Drawing.Point(4, 22);
@@ -202,10 +283,20 @@
             this.Settings.Text = "Settings";
             this.Settings.UseVisualStyleBackColor = true;
             // 
+            // HexEdit
+            // 
+            this.HexEdit.Location = new System.Drawing.Point(3, 43);
+            this.HexEdit.Name = "HexEdit";
+            this.HexEdit.Size = new System.Drawing.Size(141, 23);
+            this.HexEdit.TabIndex = 2;
+            this.HexEdit.Text = "Apply Hex Edits to BL2";
+            this.HexEdit.UseVisualStyleBackColor = true;
+            this.HexEdit.Click += new System.EventHandler(this.HexEdit_Click);
+            // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(9, 53);
+            this.checkBox1.Location = new System.Drawing.Point(31, 72);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(79, 17);
             this.checkBox1.TabIndex = 1;
@@ -217,7 +308,7 @@
             // 
             this.button1.Location = new System.Drawing.Point(3, 14);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(121, 23);
+            this.button1.Size = new System.Drawing.Size(141, 23);
             this.button1.TabIndex = 0;
             this.button1.Text = "Text Settings";
             this.button1.UseVisualStyleBackColor = true;
@@ -251,6 +342,26 @@
             this.WepBarrel.TabIndex = 2;
             this.WepBarrel.Text = "Weapon Barrel";
             this.WepBarrel.UseVisualStyleBackColor = true;
+            // 
+            // Zoom
+            // 
+            this.Zoom.FormattingEnabled = true;
+            this.Zoom.Items.AddRange(new object[] {
+            "Projectiles Per Shot",
+            "Projectile Speed",
+            "Weapon Damage",
+            "Mag Size",
+            "Burst Count",
+            "Fire Rate",
+            "Recoil",
+            "Shot Cost",
+            "Extra Shot Chance",
+            "Weapon Accuracy",
+            "Reload Speed"});
+            this.Zoom.Location = new System.Drawing.Point(198, 103);
+            this.Zoom.Name = "Zoom";
+            this.Zoom.Size = new System.Drawing.Size(121, 21);
+            this.Zoom.TabIndex = 23;
             // 
             // numericUpDown1
             // 
@@ -854,26 +965,6 @@
             this.Tabs.Size = new System.Drawing.Size(901, 455);
             this.Tabs.TabIndex = 2;
             // 
-            // Zoom
-            // 
-            this.Zoom.FormattingEnabled = true;
-            this.Zoom.Items.AddRange(new object[] {
-            "Projectiles Per Shot",
-            "Projectile Speed",
-            "Weapon Damage",
-            "Mag Size",
-            "Burst Count",
-            "Fire Rate",
-            "Recoil",
-            "Shot Cost",
-            "Extra Shot Chance",
-            "Weapon Accuracy",
-            "Reload Speed"});
-            this.Zoom.Location = new System.Drawing.Point(198, 103);
-            this.Zoom.Name = "Zoom";
-            this.Zoom.Size = new System.Drawing.Size(121, 21);
-            this.Zoom.TabIndex = 23;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -881,7 +972,6 @@
             this.ClientSize = new System.Drawing.Size(892, 476);
             this.Controls.Add(this.SaveMod);
             this.Controls.Add(this.Tabs);
-            this.Controls.Add(this.OpenButton);
             this.Controls.Add(this.NewButton);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
@@ -910,7 +1000,6 @@
 
         private System.Windows.Forms.Button NewButton;
         public System.Windows.Forms.SaveFileDialog NewFile;
-        private System.Windows.Forms.Button OpenButton;
         public System.Windows.Forms.OpenFileDialog OpenFile;
         private System.Windows.Forms.Button SaveMod;
         private System.Windows.Forms.Timer Rainbow;
@@ -956,6 +1045,14 @@
         private System.Windows.Forms.CheckBox EridiumPickup;
         private System.Windows.Forms.TabControl Tabs;
         private System.Windows.Forms.ComboBox Zoom;
+        private System.Windows.Forms.Button HexEdit;
+        private System.Windows.Forms.LinkLabel linkLabel3;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.LinkLabel linkLabel4;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.LinkLabel linkLabel5;
+        private System.Windows.Forms.Label label20;
     }
 }
 
