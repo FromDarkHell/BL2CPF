@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using Microsoft.Win32;
 using System.Text;
 using System.Windows.Forms;
 using System.Reactive.Linq;
@@ -13,51 +14,218 @@ namespace Main_Menu
         string barrel = null;
         public Form1()
         {
+            this.KeyPreview = true;
             InitializeComponent();
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            if (File.Exists(Directory.GetCurrentDirectory() + "\\Settings.ini") || File.Exists(Directory.GetCurrentDirectory() + "\\Dark.ini"))
-            {
-                if (File.Exists(Directory.GetCurrentDirectory() + "\\Settings.ini"))
-                {
-                    var cvt = new FontConverter();
-                    string fontsetting = File.ReadAllText(Directory.GetCurrentDirectory() + "\\Settings.ini");
-                    var PrintFont = cvt.ConvertFrom(fontsetting) as Font;
-                    fontDialog1.Font = PrintFont;
-                    FontSet();
-                }
-                if (File.Exists(Directory.GetCurrentDirectory() + "\\Dark.ini"))
-                {
-                    string dark = File.ReadAllText(Directory.GetCurrentDirectory() + "\\Dark.ini");
-                    if (dark.Contains("DarkEnable"))
-                    {
-                        DarkEnable();
-                    }
-                }
-            }
             var timer = Observable.Interval(TimeSpan.FromMilliseconds(250));
             Random rnd = new Random();
             timer.Subscribe(l => linkLabel1.LinkColor = Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)));
             timer.Subscribe(l => linkLabel1.VisitedLinkColor = Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)));
             timer.Subscribe(l => linkLabel1.DisabledLinkColor = Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)));
-            AutoUpdater.Start("https://raw.githubusercontent.com/FromDarkHell/-/master/updates/bl2cpf.xml");
-        }
-        private void button1_Click_1(object sender, EventArgs e) {
-            NewFile.RestoreDirectory = true;
-            NewFile.DefaultExt = "txt";
-            NewFile.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-            NewFile.Title = "New BL2 Mod";
-            NewFile.CheckFileExists = false;
-            NewFile.CheckPathExists = true;
-            if(NewFile.ShowDialog() == DialogResult.OK)
+            AutoUpdater.Start("https://fromdarkhell.github.io/-/updates/bl2cpf.xml");
+            string temp = File.ReadAllText(Directory.GetCurrentDirectory() + "\\Settings.ini");
+            if (temp.Contains(", 8pt"))
             {
-                StreamWriter sw = new StreamWriter(NewFile.FileName);
-                sw.Write(Environment.NewLine);
-                sw.Close();
+                var cvt = new FontConverter();
+                string[] fontsetting = File.ReadAllLines(Directory.GetCurrentDirectory() + "\\Settings.ini");
+                var PrintFont = cvt.ConvertFrom(fontsetting[0]) as Font;
+                fontDialog1.Font = PrintFont;
+                FontSet();
+            }
+            if(temp.Contains("bDarkEnable"))
+            {
+                DarkEnable();
             }
         }
+        private void Button1_Click_1(object sender, EventArgs e) {
+            ModNew();
+        }
         private void SaveMod_Click(object sender, EventArgs e)
+        {
+            ModSave();
+        }
+        private void LinkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://www.twitch.tv/fromdarkhell");
+        }
+        private void LinkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/BL2CP/BLCMods");
+        }
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            if (fontDialog1.ShowDialog() == DialogResult.OK)
+            {
+                FontSet();
+                if (!File.Exists(Directory.GetCurrentDirectory() + "\\Settings.ini"))
+                {
+                    var FontConvert = new FontConverter();
+                    string Font = FontConvert.ConvertToString(fontDialog1.Font);
+                    byte[] Beet = Encoding.UTF8.GetBytes(Font);
+                    File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Settings.ini", Beet);
+                }
+            }
+        }
+        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked == true) {
+                DarkEnable();
+                FontSet();
+                var cvt = new FontConverter();
+                Font fontsetting = fontDialog1.Font;
+                var PrintFont = cvt.ConvertToInvariantString(fontsetting);
+                FontSet();
+                if (!File.Exists(Directory.GetCurrentDirectory() + "\\Settings.ini"))
+                {
+                    File.AppendAllText(Directory.GetCurrentDirectory() + "\\Settings.ini", PrintFont.ToString() + Environment.NewLine + "bDarkEnable");
+                }
+                else
+                {
+                    File.WriteAllText(Directory.GetCurrentDirectory() + "\\Settings.ini", PrintFont.ToString() + Environment.NewLine + "bDarkEnable");
+                }
+            }
+            else {
+                this.BackColor = Color.White;
+                WepCard.BackColor = Color.White;
+                WepBarrel.BackColor = Color.White;
+                Settings.BackColor = Color.White;
+                About.BackColor = Color.White;
+                checkBox1.ForeColor = Color.Black;
+                label2.ForeColor = Color.Black;
+                OrigWepName.ForeColor = Color.Black;
+                label4.ForeColor = Color.Black;
+                NewWepName.ForeColor = Color.Black;
+                label3.ForeColor = Color.Black;
+                RedText.ForeColor = Color.Black;
+                label12.ForeColor = Color.Black;
+                Rarity.ForeColor = Color.Black;
+                label5.ForeColor = Color.Black;
+                FirinMode.ForeColor = Color.Black;
+                label11.ForeColor = Color.Black;
+                label6.ForeColor = Color.Black;
+                Attribute.ForeColor = Color.Black;
+                label7.ForeColor = Color.Black;
+                AttributeNum.ForeColor = Color.Black;
+                label10.ForeColor = Color.Black;
+                label8.ForeColor = Color.Black;
+                External.ForeColor = Color.Black;
+                ExternalNum.ForeColor = Color.Black;
+                label9.ForeColor = Color.Black;
+                label13.ForeColor = Color.Black;
+                Gestalt.ForeColor = Color.Black;
+                label14.ForeColor = Color.Black;
+                label15.ForeColor = Color.Black;
+                linkLabel2.LinkColor = Color.Black;
+                label16.ForeColor = Color.Black;
+                label1.ForeColor = Color.Black;
+                checkBox2.ForeColor = Color.Black;
+                var cvt = new FontConverter();
+                Font fontsetting = fontDialog1.Font;
+                var PrintFont = cvt.ConvertToInvariantString(fontsetting);
+                FontSet();
+                if (!File.Exists(Directory.GetCurrentDirectory() + "\\Settings.ini"))
+                {
+                    File.Create(Directory.GetCurrentDirectory() + "\\Settings.ini");
+                }
+                var FontConvert = new FontConverter();
+                File.WriteAllText(Directory.GetCurrentDirectory() + "\\Settings.ini", PrintFont + Environment.NewLine + "DarkDisable");
+            }
+        }
+        private void HexEdit_Click(object sender, EventArgs e)
+        {
+            HexEdit hex = new HexEdit();
+            hex.Show();
+        }
+        private void LinkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/AnotherBugworm");
+        }
+        private void LinkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/AnotherBugworm/Borderlands2Patcher");
+        }
+        private void LinkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.twitch.tv/lightchaosman");
+        }
+        public void FontSet()
+        {
+            label2.Font = fontDialog1.Font;
+            OrigWepName.Font = fontDialog1.Font;
+            label4.Font = fontDialog1.Font;
+            NewWepName.Font = fontDialog1.Font;
+            label3.Font = fontDialog1.Font;
+            RedText.Font = fontDialog1.Font;
+            label12.Font = fontDialog1.Font;
+            Rarity.Font = fontDialog1.Font;
+            label5.Font = fontDialog1.Font;
+            FirinMode.Font = fontDialog1.Font;
+            label11.Font = fontDialog1.Font;
+            label6.Font = fontDialog1.Font;
+            Attribute.Font = fontDialog1.Font;
+            label7.Font = fontDialog1.Font;
+            AttributeNum.Font = fontDialog1.Font;
+            label10.Font = fontDialog1.Font;
+            label8.Font = fontDialog1.Font;
+            External.Font = fontDialog1.Font;
+            ExternalNum.Font = fontDialog1.Font;
+            label9.Font = fontDialog1.Font;
+            label13.Font = fontDialog1.Font;
+            Gestalt.Font = fontDialog1.Font;
+            linkLabel2.Font = fontDialog1.Font;
+            label1.Font = fontDialog1.Font;
+            checkBox2.Font = fontDialog1.Font;
+        }
+        public void DarkEnable()
+        {
+            this.BackColor = Color.Gray;
+            label22.ForeColor = Color.White;
+            WepCard.BackColor = Color.Black;
+            checkBox1.ForeColor = Color.White;
+            WepBarrel.BackColor = Color.Black;
+            Settings.BackColor = Color.Black;
+            About.BackColor = Color.Black;
+            label2.ForeColor = Color.White;
+            label4.ForeColor = Color.White;
+            label3.ForeColor = Color.White;
+            label12.ForeColor = Color.White;
+            label5.ForeColor = Color.White;
+            label11.ForeColor = Color.White;
+            label6.ForeColor = Color.White;
+            label7.ForeColor = Color.White;
+            label10.ForeColor = Color.White;
+            label8.ForeColor = Color.White;
+            label9.ForeColor = Color.White;
+            label13.ForeColor = Color.White;
+            label14.ForeColor = Color.White;
+            label15.ForeColor = Color.White;
+            linkLabel2.LinkColor = Color.White;
+            label18.ForeColor = Color.White;
+            label19.ForeColor = Color.White;
+            label21.ForeColor = Color.White;
+            label20.ForeColor = Color.White;
+            linkLabel3.LinkColor = Color.White;
+            linkLabel4.LinkColor = Color.White;
+            linkLabel5.LinkColor = Color.White;
+            checkBox2.ForeColor = Color.White;
+            label1.ForeColor = Color.White;
+            label16.ForeColor = Color.White;
+            checkBox2.ForeColor = Color.White;
+        }
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.S)
+            {
+                ModSave();
+            }
+            if(e.Control && e.KeyCode == Keys.N)
+            {
+                ModNew();
+            }
+        }
+        public void ModSave()
         {
             #region Setup
             NewFile.RestoreDirectory = true;
@@ -70,18 +238,6 @@ namespace Main_Menu
             if (NewFile.ShowDialog() == DialogResult.OK)
             {
                 StreamWriter sw = new StreamWriter(NewFile.FileName);
-                #region Eridium Pick Up
-                if (EridiumPickup.Checked == true)
-                {
-                    sw.WriteLine("set GD_Currency.A_Item.EridiumBar bAutomaticallyPickup True " + Environment.NewLine);
-                    sw.WriteLine("set GD_Currency.A_Item.EridiumStick bAutomaticallyPickup True " + Environment.NewLine);
-                    sw.WriteLine("set GD_Iris_TorgueToken.UsableItems.Pickup_TorgueToken bAutomaticallyPickup True" + Environment.NewLine);
-                    sw.WriteLine("set GD_Orchid_SeraphCrystal.UsableItems.Pickup_SeraphCrystal bAutomaticallyPickup True" + Environment.NewLine);
-                    sw.WriteLine("set GD_Aster_SeraphCrystal.UsableItems.Pickup_SeraphCrystal bAutomaticallyPickup True" + Environment.NewLine);
-                    sw.WriteLine("set GD_Iris_SeraphCrystal.UsableItems.Pickup_SeraphCrystal bAutomaticallyPickup True" + Environment.NewLine);
-                    sw.WriteLine("set GD_Sage_SeraphCrystal.UsableItems.Pickup_SeraphCrystal bAutomaticallyPickup True");
-                }
-                #endregion
                 #region Weapon Stuff
                 if (OrigWepName.Text == "12 Pounder")
                 {
@@ -102,13 +258,14 @@ namespace Main_Menu
                 else if (OrigWepName.Text == "Bad Touch")
                 {
                     barrel = "GD_Weap_SMG.Barrel.SMG_Barrel_Maliwan_BadTouch";
-                    if(string.IsNullOrWhiteSpace(OrigWepName.Text))
+                    if (string.IsNullOrWhiteSpace(OrigWepName.Text))
                     {
                         sw.WriteLine("set GD_Weap_SMG.Name.Title.Title__Unique_BadTouch PartName " + NewWepName.Text + Environment.NewLine);
                     }
-                    if(string.IsNullOrWhiteSpace(RedText.Text)) {
+                    if (string.IsNullOrWhiteSpace(RedText.Text))
+                    {
                         sw.WriteLine("set GD_Weap_SMG.Name.Title.Title__Unique_BadTouch:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
-                    }         
+                    }
                     if (FirinMode.Text != null)
                     {
                         sw.WriteLine("set " + barrel + " CustomFiringModeDefinition FiringModeDefinition'" + FirinMode.Text + "'" + Environment.NewLine);
@@ -125,7 +282,7 @@ namespace Main_Menu
                     if (string.IsNullOrWhiteSpace(RedText.Text))
                     {
                         sw.WriteLine("set GD_Weap_SMG.Name.Title.Title__Unique_Bane:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
-                    }  
+                    }
                     if (FirinMode.Text != null)
                     {
                         sw.WriteLine("set " + barrel + " CustomFiringModeDefinition FiringModeDefinition'" + FirinMode.Text + "'" + Environment.NewLine);
@@ -142,7 +299,7 @@ namespace Main_Menu
                     {
                         sw.WriteLine("set GD_Weap_Shotgun.Name.Title.Title__Unique_Blockhead:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
                     }
-                        
+
                     if (FirinMode.Text != null)
                     {
                         sw.WriteLine("set " + barrel + " CustomFiringModeDefinition FiringModeDefinition'" + FirinMode.Text + "'" + Environment.NewLine);
@@ -159,7 +316,7 @@ namespace Main_Menu
                     {
                         sw.WriteLine("set GD_Weap_SMG.Name.Title.Title__Unique_BoneShredder:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
                     }
-                        
+
                     if (FirinMode.Text != null)
                     {
                         sw.WriteLine("set " + barrel + " CustomFiringModeDefinition FiringModeDefinition'" + FirinMode.Text + "'" + Environment.NewLine);
@@ -175,7 +332,7 @@ namespace Main_Menu
                     if (string.IsNullOrWhiteSpace(OrigWepName.Text))
                     {
                         sw.WriteLine("set GD_Iris_Weapons.Name.Title.Title_Unique_BoomPuppy:AttributePresentationDefinition_8 NoConstraintText " + RedText.Text + Environment.NewLine);
-                    }   
+                    }
                     if (FirinMode.Text != null)
                     {
                         sw.WriteLine("set " + barrel + " CustomFiringModeDefinition FiringModeDefinition'" + FirinMode.Text + "'" + Environment.NewLine);
@@ -317,7 +474,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Pistol.Barrel.Fibber.Pistol_Barrel_Bandit_Fibber_2";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Pistol.Name.Title.Title__Unique_Fibber PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Pistol.Name.Title.Title__Unique_Fibber PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -329,7 +486,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Pistol.Barrel.Fibber.Pistol_Barrel_Bandit_Fibber_4";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Pistol.Name.Title.Title__Unique_Fibber PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Pistol.Name.Title.Title__Unique_Fibber PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -341,7 +498,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Pistol.Barrel.Fibber.Pistol_Barrel_Bandit_Fibber_3";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Pistol.Name.Title.Title__Unique_Fibber PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Pistol.Name.Title.Title__Unique_Fibber PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -858,7 +1015,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_AssaultRifle.Barrel.AR_Barrel_Bandit_Madhouse";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_AssaultRifle.Name.Title_Bandit.Title_Legendary_Madhouse PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_AssaultRifle.Name.Title_Bandit.Title_Legendary_Madhouse PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -870,7 +1027,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Pistol.Barrel.Pistol_Barrel_Bandit_Gub";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Pistol.Name.Title_Bandit.Title_Legendary_Gub PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Pistol.Name.Title_Bandit.Title_Legendary_Gub PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -882,7 +1039,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Launchers.Barrel.L_Barrel_Bandit_BadaBoom";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Launchers.Name.Title_Bandit.Title_Legendary_Badaboom PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Launchers.Name.Title_Bandit.Title_Legendary_Badaboom PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -894,7 +1051,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_SMG.Barrel.SMG_Barrel_Bandit_Slagga";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_SMG.Name.Title_Bandit.Title_Legendary_Slagga PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_SMG.Name.Title_Bandit.Title_Legendary_Slagga PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -906,7 +1063,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Shotgun.Barrel.SG_Barrel_Jakobs_Sledges";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Shotgun.Name.Title_Bandit.Title_Legendary_Shotgun PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Shotgun.Name.Title_Bandit.Title_Legendary_Shotgun PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -918,7 +1075,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_AssaultRifle.Barrel.AR_Barrel_Dahl_Veruc";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_AssaultRifle.Name.Title_Dahl.Title_Legendary_Veruc PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_AssaultRifle.Name.Title_Dahl.Title_Legendary_Veruc PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -930,7 +1087,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_SMG.Barrel.SMG_Barrel_Dahl_Emperor";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_SMG.Name.Title.Title_Legendary_Dahl_Emperor PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_SMG.Name.Title.Title_Legendary_Dahl_Emperor PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -942,7 +1099,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_SniperRifles.Barrel.SR_Barrel_Dahl_Pitchfork";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_SniperRifles.Name.Title_Dahl.Title_Legendary_Pitchfork PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_SniperRifles.Name.Title_Dahl.Title_Legendary_Pitchfork PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -954,7 +1111,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Pistol.Barrel.Pistol_Barrel_Dahl_Hornet";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Pistol.Name.Title_Dahl.Title_Legendary_Hornet PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Pistol.Name.Title_Dahl.Title_Legendary_Hornet PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -966,7 +1123,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Launchers.Barrel.L_Barrel_Vladof_Mongol";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Launchers.Name.Title_Vladof.Title_Legendary_Mongol PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Launchers.Name.Title_Vladof.Title_Legendary_Mongol PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -978,7 +1135,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Pistol.Barrel.Pistol_Barrel_Vladof_Infinity";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Pistol.Name.Title_Vladof.Title_Legendary_Infinity PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Pistol.Name.Title_Vladof.Title_Legendary_Infinity PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -990,7 +1147,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_AssaultRifle.Barrel.AR_Barrel_Vladof_Shredifier";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_AssaultRifle.Name.Title_Vladof.Title_Legendary_Shredifier PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_AssaultRifle.Name.Title_Vladof.Title_Legendary_Shredifier PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1002,7 +1159,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Shotgun.Barrel.SG_Barrel_Torgue_Flakker";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Shotgun.Name.Title_Torgue.Title_Legendary_Flakker PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Shotgun.Name.Title_Torgue.Title_Legendary_Flakker PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1014,7 +1171,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Launchers.Barrel.L_Barrel_Torgue_Nukem";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Launchers.Name.Title_Torgue.Title_Legendary_Nukem PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Launchers.Name.Title_Torgue.Title_Legendary_Nukem PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1026,7 +1183,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Pistol.Barrel.Pistol_Barrel_Torgue_Calla";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Pistol.Name.Title_Torgue.Title_Legendary_Calla PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Pistol.Name.Title_Torgue.Title_Legendary_Calla PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1038,7 +1195,7 @@ namespace Main_Menu
                     barrel = "GD_Aster_Weapons.AssaultRifles.AR_Barrel_Vladof_Ogre";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Aster_Weapons.Name.Title.Title_Unique_Ogre PartName" + NewWepName);
+                        sw.WriteLine("set GD_Aster_Weapons.Name.Title.Title_Unique_Ogre PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1050,7 +1207,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_AssaultRifle.Barrel.AR_Barrel_Torgue_KerBlaster";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_AssaultRifle.Name.Title_Torgue.Title_Legendary_KerBlaster PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_AssaultRifle.Name.Title_Torgue.Title_Legendary_KerBlaster PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1062,7 +1219,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_SMG.Barrel.SMG_Barrel_Tediore_BabyMaker";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_SMG.Name.Title_Tediore.Title_Legendary_BabyMaker PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_SMG.Name.Title_Tediore.Title_Legendary_BabyMaker PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1074,7 +1231,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Shotgun.Barrel.SG_Barrel_Tediore_Deliverance";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Shotgun.Name.Title_Tediore.Title_Legendary_Deliverance PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Shotgun.Name.Title_Tediore.Title_Legendary_Deliverance PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1086,7 +1243,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Launchers.Barrel.L_Barrel_Tediore_Bunny";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Launchers.Name.Title_Tediore.Title_Legendary_Bunny PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Launchers.Name.Title_Tediore.Title_Legendary_Bunny PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1098,7 +1255,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Pistol.Barrel.Pistol_Barrel_Tediore_Gunerang";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Pistol.Name.Title_Tediore.Title_Legendary_Gunerang PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Pistol.Name.Title_Tediore.Title_Legendary_Gunerang PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1110,7 +1267,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_SMG.Barrel.SMG_Barrel_Maliwan_HellFire";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_SMG.Name.Title_Maliwan.Title_Legendary_HellFire PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_SMG.Name.Title_Maliwan.Title_Legendary_HellFire PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1122,7 +1279,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_SniperRifles.Barrel.SR_Barrel_Maliwan_Volcano";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_SniperRifles.Name.Title_Maliwan.Title_Legendary_Volcano PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_SniperRifles.Name.Title_Maliwan.Title_Legendary_Volcano PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1134,7 +1291,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Launchers.Barrel.L_Barrel_Maliwan_Pyrophobia";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Launchers.Name.Title_Maliwan.Title_Legendary_Pyrophobia PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Launchers.Name.Title_Maliwan.Title_Legendary_Pyrophobia PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1146,7 +1303,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Launchers.Barrel.L_Barrel_Alien_Maliwan_Norfleet";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Launchers.Name.Title_Maliwan.Title_Barrel_Maliwan_Norfleet PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Launchers.Name.Title_Maliwan.Title_Barrel_Maliwan_Norfleet PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1158,7 +1315,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Pistol.Barrel.Pistol_Barrel_Maliwan_ThunderballFists";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Pistol.Name.Title_Maliwan.Title_Legendary_ThunderballFists PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Pistol.Name.Title_Maliwan.Title_Legendary_ThunderballFists PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1170,7 +1327,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_SniperRifles.Barrel.SR_Barrel_Jakobs_Skullmasher";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_SniperRifles.Name.Title_Jakobs.Title_Legendary_Skullmasher PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_SniperRifles.Name.Title_Jakobs.Title_Legendary_Skullmasher PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1182,7 +1339,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Shotgun.Barrel.SG_Barrel_Hyperion_Striker";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Shotgun.Name.Title_Jakobs.Title_Legendary_Striker PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Shotgun.Name.Title_Jakobs.Title_Legendary_Striker PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1194,7 +1351,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Pistol.Barrel.Pistol_Barrel_Jakobs_Maggie";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Pistol.Name.Title_Jakobs.Title_Legendary_Maggie PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Pistol.Name.Title_Jakobs.Title_Legendary_Maggie PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1206,7 +1363,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_AssaultRifle.Barrel.AR_Barrel_Dahl_HammerBuster";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_AssaultRifle.Name.Title_Jakobs.Title_Legendary_HammerBuster PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_AssaultRifle.Name.Title_Jakobs.Title_Legendary_HammerBuster PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1218,7 +1375,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_SMG.Barrel.SMG_Barrel_Hyperion_Bitch";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_SMG.Name.Title_Hyperion.Title_Legendary_Bitch PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_SMG.Name.Title_Hyperion.Title_Legendary_Bitch PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1230,7 +1387,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_SniperRifles.Barrel.SR_Barrel_Alien_Longbow";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_SniperRifles.Name.Title.Title__Unique_Longbow PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_SniperRifles.Name.Title.Title__Unique_Longbow PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1242,7 +1399,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_SniperRifles.Barrel.SR_Barrel_Hyperion_Invader";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_SniperRifles.Name.Title_Hyperion.Title_Legendary_Invader PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_SniperRifles.Name.Title_Hyperion.Title_Legendary_Invader PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1254,7 +1411,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Shotgun.Barrel.SG_Barrel_Hyperion_ConferenceCall";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Shotgun.Name.Title_Hyperion.Title_Legendary_ConferenceCall PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Shotgun.Name.Title_Hyperion.Title_Legendary_ConferenceCall PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1266,7 +1423,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_Pistol.Barrel.Pistol_Barrel_Hyperion_LogansGun";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_Pistol.Name.Title_Hyperion.Title_Legendary_LogansGun PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_Pistol.Name.Title_Hyperion.Title_Legendary_LogansGun PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1278,7 +1435,7 @@ namespace Main_Menu
                     barrel = "GD_Weap_SniperRifles.Barrel.SR_Barrel_Vladof_Lyudmila";
                     if (!string.IsNullOrWhiteSpace(NewWepName.Text))
                     {
-                        sw.WriteLine("set GD_Weap_SniperRifles.Name.Title_Vladof.Title_Legendary_Lyudmila PartName" + NewWepName);
+                        sw.WriteLine("set GD_Weap_SniperRifles.Name.Title_Vladof.Title_Legendary_Lyudmila PartName " + NewWepName.Text);
                     }
                     if (!string.IsNullOrWhiteSpace(RedText.Text))
                     {
@@ -1286,79 +1443,85 @@ namespace Main_Menu
                     }
                 }
                 #endregion
-                #region Weapon Attribute Effects
-                if(Attribute.Text != null)
+                #region Firing Mode
+                if(!string.IsNullOrWhiteSpace(FirinMode.Text))
                 {
-                    if(Attribute.Text == "Projectiles Per Shot")
+                    sw.WriteLine("set " + barrel + " CustomFiringModeDefinition FiringModeDefinition'" + FirinMode.Text + "'" + Environment.NewLine);
+                }
+                #endregion
+                #region Weapon Attribute Effects
+                if (Attribute.Text != null)
+                {
+                    if (Attribute.Text == "Projectiles Per Shot")
                     {
                         sw.WriteLine("set " + barrel + " WeaponAttributeEffects  ((AttributeToModify=AttributeDefinition'D_Attributes.Weapon.WeaponProjectilesPerShot',ModifierType=MT_PreAdd,BaseModifierValue=(BaseValueConstant=" + AttributeNum.Value + ",BaseValueAttribute=None,InitializationDefinition=None,BaseValueScaleConstant=1.000000))");
                     }
-                    else if(Attribute.Text == "Projectile Speed")
+                    else if (Attribute.Text == "Projectile Speed")
                     {
                         sw.WriteLine("set " + barrel + " WeaponAttributeEffects ((AttributeToModify=AttributeDefinition'D_Attributes.Weapon.WeaponProjectileSpeedMultiplier',ModifierType=MT_Scale,BaseModifierValue=(BaseValueConstant=" + AttributeNum.Value + ",BaseValueAttribute=None,InitializationDefinition=None,BaseValueScaleConstant=1.000000)))");
                     }
-                    else if(Attribute.Text == "Weapon Damage")
+                    else if (Attribute.Text == "Weapon Damage")
                     {
                         sw.WriteLine("set " + barrel + " WeaponAttributeEffects ((AttributeToModify=AttributeDefinition'D_Attributes.Weapon.WeaponDamage',ModifierType=MT_Scale,BaseModifierValue=(BaseValueConstant=" + AttributeNum.Value + ",BaseValueAttribute=None,InitializationDefinition=None,BaseValueScaleConstant=1.000000))");
                     }
-                    else if(Attribute.Text == "Mag Size")
+                    else if (Attribute.Text == "Mag Size")
                     {
                         sw.WriteLine("set " + barrel + " WeaponAttributeEffects ((AttributeToModify=AttributeDefinition'D_Attributes.Weapon.WeaponClipSize',ModifierType=MT_Scale,BaseModifierValue=(BaseValueConstant=" + AttributeNum.Value + ",BaseValueAttribute=None,InitializationDefinition=None,BaseValueScaleConstant=1.000000)))");
                     }
-                    else if(Attribute.Text == "Burst Count")
+                    else if (Attribute.Text == "Burst Count")
                     {
                         sw.WriteLine("set " + barrel + " WeaponAttributeEffects ((AttributeToModify'D_Attributes.WeaponAutomaticBurstCount',ModifierType=MT_PreAdd,BaseModifierValue=(BaseValueConstant=" + AttributeNum.Value + ",BaseValueAttribute=None,InitializationDefinition=None,BaseValueScaleConstant=1.000000)))");
                     }
-                    else if(Attribute.Text == "Fire Rate")
+                    else if (Attribute.Text == "Fire Rate")
                     {
                         sw.WriteLine("set " + barrel + " WeaponAttributeEffects ((AttributeToModify=AttributeDefinition'D_Attributes.Weapon.WeaponFireInterval',ModifierType=MT_Scale,BaseModifierValue=(BaseValueConstant=" + AttributeNum.Value + ",BaseValueAttribute=None,InitializationDefinition=None,BaseValueScaleConstant=1.000000)))");
                     }
-                    else if(Attribute.Text == "Recoil")
+                    else if (Attribute.Text == "Recoil")
                     {
                         sw.WriteLine("set " + barrel + " WeaponAttributeEffects ((AttributeToModify=AttributeDefinition'D_Attributes.Weapon.WeaponPerShotAccuracyImpulse',ModifierType=MT_PreAdd,BaseModifierValue=(BaseValueConstant=" + AttributeNum.Value + ",BaseValueAttribute=None,InitializationDefinition=None,BaseValueScaleConstant=1.000000)))");
                     }
-                    else if(Attribute.Text == "Shot Cost")
+                    else if (Attribute.Text == "Shot Cost")
                     {
                         sw.WriteLine("set " + barrel + " WeaponAttributeEffects ((AttributeToModify=AttributeDefinition'D_Attributes.Weapon.WeaponShotCost',ModifierType=MT_PreAdd,BaseModifierValue=(BaseValueConstant=" + AttributeNum.Value + ",BaseValueAttribute=None,InitializationDefinition=None,BaseValueScaleConstant=1.000000)))");
                     }
-                    else if(Attribute.Text == "Extra Shot Chance")
+                    else if (Attribute.Text == "Extra Shot Chance")
                     {
                         sw.WriteLine("set " + barrel + " WeaponAttributeEffects ((AttributeToModify=AttributeDefinition'D_Attributes.Weapon.WeaponExtraShotChance',ModifierType=MT_PreAdd,BaseModifierValue=(BaseValueConstant=" + AttributeNum.Value + ",BaseValueAttribute=None,InitializationDefinition=None,BaseValueScaleConstant=1.000000)))");
                     }
-                    else if(Attribute.Text == "Weapon Accuracy")
+                    else if (Attribute.Text == "Weapon Accuracy")
                     {
                         sw.WriteLine("set " + barrel + " WeaponAttributeEffects ((AttributeToModify=AttributeDefinition'D_Attributes.Weapon.WeaponSpread',ModifierType=MT_Scale,BaseModifierValue=(BaseValueConstant=" + AttributeNum.Value + ",BaseValueAttribute=None,InitializationDefinition=None,BaseValueScaleConstant=1.000000)))");
                     }
-                    else if(Attribute.Text == "Reload Speed")
+                    else if (Attribute.Text == "Reload Speed")
                     {
-                        sw.WriteLine("set " + barrel + " WeaponAttributeEffects ((AttributeToModify=AttributeDefinition'D_Attributes.Weapon.WeaponReloadSpeed',ModifierType=MT_Scale,BaseModifierValue=(BaseValueConstant=" +AttributeNum.Value + ",BaseValueAttribute=None,InitializationDefinition=None,BaseValueScaleConstant=1.000000)))");
+                        sw.WriteLine("set " + barrel + " WeaponAttributeEffects ((AttributeToModify=AttributeDefinition'D_Attributes.Weapon.WeaponReloadSpeed',ModifierType=MT_Scale,BaseModifierValue=(BaseValueConstant=" + AttributeNum.Value + ",BaseValueAttribute=None,InitializationDefinition=None,BaseValueScaleConstant=1.000000)))");
                     }
                 }
                 #endregion
                 #region Rarity
-                if(Rarity != null)
+                if (Rarity != null)
                 {
-                    sw.WriteLine("set " + barrel + " rarity (BaseValueConstant=" + Rarity.Value + ",BaseValueAttribute=None,InitializationDefinition=None,BaseValueScaleConstant=1.000000)");
-                    sw.WriteLine("set WillowGame.GlobalsDefinition RarityLevelColors ((MinLevel=0,MaxLevel=0,Color=(B=175,G=193,R=205,A=0),DropLifeSpanType=DROP_ShortLived,RarityRating=RARITY_Unknown),(MinLevel=1,MaxLevel=1,Color=(B=255,G=255,R=255,A=255),DropLifeSpanType=DROP_ShortLived,RarityRating=RARITY_Common),(MinLevel=2,MaxLevel=2,Color=(B=11,G=210,R=61,A=255),DropLifeSpanType=DROP_LongLived,RarityRating=RARITY_Uncommon),(MinLevel=3,MaxLevel=3,Color=(B=255,G=142,R=60,A=255),DropLifeSpanType=DROP_LiveForever,RarityRating=RARITY_Rare),(MinLevel=4,MaxLevel=4,Color=(B=229,G=63,R=168,A=255),DropLifeSpanType=DROP_LiveForever,RarityRating=RARITY_VeryRare),(MinLevel=5,MaxLevel=5,Color=(B=0,G=180,R=255,A=255),DropLifeSpanType=DROP_LiveForever,RarityRating=RARITY_Legendary),(MinLevel=6,MaxLevel=6,Color=(B=168,G=0,R=202,A=255),DropLifeSpanType=DROP_LiveForever,RarityRating=RARITY_VeryRare),(MinLevel=7,MaxLevel=10,Color=(B=0,G=180,R=255,A=255),DropLifeSpanType=DROP_LiveForever,RarityRating=RARITY_Legendary),(MinLevel=12,MaxLevel=170,Color=(B=50,G=0,R=230,A=255),DropLifeSpanType=DROP_LiveForever,RarityRating=RARITY_Unknown),(MinLevel=171,MaxLevel=175,Color=(B=71,G=71,R=207,A=255),DropLifeSpanType=DROP_ShortLived,RarityRating=RARITY_Unknown),(MinLevel=176,MaxLevel=180,Color=(B=167,G=199,R=255,A=0),DropLifeSpanType=DROP_ShortLived,RarityRating=RARITY_Unknown),(MinLevel=181,MaxLevel=499,Color=(B=13,G=255,R=255,A=0),DropLifeSpanType=DROP_ShortLived,RarityRating=RARITY_Unknown),(MinLevel=500,MaxLevel=500,Color=(B=255,G=255,R=0,A=0),DropLifeSpanType=DROP_LiveForever,RarityRating=RARITY_Unknown),(MinLevel=501,MaxLevel=501,Color=(B=184,G=154,R=255,A=0),DropLifeSpanType=DROP_LiveForever,RarityRating=RARITY_Seraph),(MinLevel=502,MaxLevel=502,Color=(B=255,G=255,R=255,A=0),DropLifeSpanType=DROP_LiveAsLongAsLevel,RarityRating=RARITY_Unknown),(MinLevel=503,MaxLevel=503,Color=(B=200,G=50,R=145,A=255),DropLifeSpanType=DROP_LiveForever,RarityRating=RARITY_Unknown),(MinLevel=504,MaxLevel=504,Color=(B=255,G=255,R=0,A=0),DropLifeSpanType=DROP_VeryShortLived,RarityRating=RARITY_Unknown))");
+                    sw.WriteLine("set " + barrel + " rarity (BaseValueConstant=" + Rarity.Value + ",BaseValueAttribute=None,InitializationDefinition=None,BaseValueScaleConstant=1.000000)" + Environment.NewLine);
+                    sw.WriteLine("set WillowGame.GlobalsDefinition RarityLevelColors ((MinLevel=0,MaxLevel=0,Color=(B=175,G=193,R=205,A=0),DropLifeSpanType=DROP_ShortLived,RarityRating=RARITY_Unknown),(MinLevel=1,MaxLevel=1,Color=(B=255,G=255,R=255,A=255),DropLifeSpanType=DROP_ShortLived,RarityRating=RARITY_Common),(MinLevel=2,MaxLevel=2,Color=(B=11,G=210,R=61,A=255),DropLifeSpanType=DROP_LongLived,RarityRating=RARITY_Uncommon),(MinLevel=3,MaxLevel=3,Color=(B=255,G=142,R=60,A=255),DropLifeSpanType=DROP_LiveForever,RarityRating=RARITY_Rare),(MinLevel=4,MaxLevel=4,Color=(B=229,G=63,R=168,A=255),DropLifeSpanType=DROP_LiveForever,RarityRating=RARITY_VeryRare),(MinLevel=5,MaxLevel=5,Color=(B=0,G=180,R=255,A=255),DropLifeSpanType=DROP_LiveForever,RarityRating=RARITY_Legendary),(MinLevel=6,MaxLevel=6,Color=(B=168,G=0,R=202,A=255),DropLifeSpanType=DROP_LiveForever,RarityRating=RARITY_VeryRare),(MinLevel=7,MaxLevel=10,Color=(B=0,G=180,R=255,A=255),DropLifeSpanType=DROP_LiveForever,RarityRating=RARITY_Legendary),(MinLevel=12,MaxLevel=170,Color=(B=50,G=0,R=230,A=255),DropLifeSpanType=DROP_LiveForever,RarityRating=RARITY_Unknown),(MinLevel=171,MaxLevel=175,Color=(B=71,G=71,R=207,A=255),DropLifeSpanType=DROP_ShortLived,RarityRating=RARITY_Unknown),(MinLevel=176,MaxLevel=180,Color=(B=167,G=199,R=255,A=0),DropLifeSpanType=DROP_ShortLived,RarityRating=RARITY_Unknown),(MinLevel=181,MaxLevel=499,Color=(B=13,G=255,R=255,A=0),DropLifeSpanType=DROP_ShortLived,RarityRating=RARITY_Unknown),(MinLevel=500,MaxLevel=500,Color=(B=255,G=255,R=0,A=0),DropLifeSpanType=DROP_LiveForever,RarityRating=RARITY_Unknown),(MinLevel=501,MaxLevel=501,Color=(B=184,G=154,R=255,A=0),DropLifeSpanType=DROP_LiveForever,RarityRating=RARITY_Seraph),(MinLevel=502,MaxLevel=502,Color=(B=255,G=255,R=255,A=0),DropLifeSpanType=DROP_LiveAsLongAsLevel,RarityRating=RARITY_Unknown),(MinLevel=503,MaxLevel=503,Color=(B=200,G=50,R=145,A=255),DropLifeSpanType=DROP_LiveForever,RarityRating=RARITY_Unknown),(MinLevel=504,MaxLevel=504,Color=(B=255,G=255,R=0,A=0),DropLifeSpanType=DROP_VeryShortLived,RarityRating=RARITY_Unknown))" + Environment.NewLine);
                 }
                 #endregion
                 #region External Attribute Effects
-                if(External.Text != null)
+                if (External.Text != null)
                 {
-                    if(External.Text == "Convert Damage to Healing Percent")
+                    if (External.Text == "Convert Damage to Healing Percent")
                     {
                         sw.WriteLine("set " + barrel + " ExternalAttributeEffects ((AttributeToModify=AttributeDefinition'D_Attributes.DamageEnhancementModifiers.PlayerConvertDamageToHealingPercent',ModifierType=MT_PreAdd,BaseModifierValue=(BaseValueConstant=" + ExternalNum.Value + ",BaseValueAttribute=None,InitializationDefinition=None,BaseValueScaleConstant=1.000000)))");
                     }
                 }
                 #endregion
                 #region Gestalt Skeletal Mesh
-                if(!string.IsNullOrWhiteSpace(Gestalt.Text))
+                if (!string.IsNullOrWhiteSpace(Gestalt.Text))
                 {
                     sw.WriteLine("set " + barrel + " GestaltModeSkeletalMeshName " + Gestalt.Text);
                 }
                 #endregion
                 #region Grenade Damage Type
-                if(checkBox2.Checked)
+                if (checkBox2.Checked)
                 {
                     sw.WriteLine("set " + barrel + " DamageTypeDefinition WillowDamageTypeDefinition'GD_Explosive.DamageType.DmgType_Explosive_Impact'" + Environment.NewLine);
                 }
@@ -1412,168 +1575,33 @@ namespace Main_Menu
                     }
                 }
                 #endregion
+                #region Spinning
+                if(!string.IsNullOrWhiteSpace(Spinning.Text) && Spinning.Text == "Yes")
+                {
+                    sw.WriteLine("set " + barrel + " bIsSpinningEnabled True");
+                }
+                else if(!string.IsNullOrWhiteSpace(Spinning.Text) && Spinning.Text == "No")
+                {
+                    sw.WriteLine("set " + barrel + " bIsSpinningEnabled False");
+                }
+#endregion
                 sw.Close();
             }
         }
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        public void ModNew()
         {
-            System.Diagnostics.Process.Start("http://www.twitch.tv/fromdarkhell");
-        }
-        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("https://github.com/BL2CP/BLCMods");
-        }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (fontDialog1.ShowDialog() == DialogResult.OK)
+            NewFile.RestoreDirectory = true;
+            NewFile.DefaultExt = "txt";
+            NewFile.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            NewFile.Title = "New BL2 Mod";
+            NewFile.CheckFileExists = false;
+            NewFile.CheckPathExists = true;
+            if (NewFile.ShowDialog() == DialogResult.OK)
             {
-                FontSet();
-                if (!File.Exists(Directory.GetCurrentDirectory() + "\\Settings.ini"))
-                {
-                    var FontConvert = new FontConverter();
-                    string Font = FontConvert.ConvertToString(fontDialog1.Font);
-                    byte[] Beet = Encoding.UTF8.GetBytes(Font);
-                    File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Settings.ini", Beet);
-                }
+                StreamWriter sw = new StreamWriter(NewFile.FileName);
+                sw.Write(Environment.NewLine);
+                sw.Close();
             }
-        }
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            if(checkBox1.Checked)
-            {
-                DarkEnable();
-                FontSet();
-                string Dark = "DarkEnable";
-                byte[] toBits = Encoding.UTF8.GetBytes(Dark);
-                if (!File.Exists(Directory.GetCurrentDirectory() + "\\Dark.ini"))
-                {
-                    File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Dark.ini", toBits);
-                }
-                var FontConvert = new FontConverter();
-            }
-            else
-            {
-                this.BackColor = Color.White;
-                General.BackColor = Color.White;
-                WepCard.BackColor = Color.White;
-                WepBarrel.BackColor = Color.White;
-                Settings.BackColor = Color.White;
-                About.BackColor = Color.White;
-                checkBox1.ForeColor = Color.Black;
-                EridiumPickup.ForeColor = Color.Black;
-                label2.ForeColor = Color.Black;
-                OrigWepName.ForeColor = Color.Black;
-                label4.ForeColor = Color.Black;
-                NewWepName.ForeColor = Color.Black;
-                label3.ForeColor = Color.Black;
-                RedText.ForeColor = Color.Black;
-                label12.ForeColor = Color.Black;
-                Rarity.ForeColor = Color.Black;
-                label5.ForeColor = Color.Black;
-                FirinMode.ForeColor = Color.Black;
-                label11.ForeColor = Color.Black;
-                label6.ForeColor = Color.Black;
-                Attribute.ForeColor = Color.Black;
-                label7.ForeColor = Color.Black;
-                AttributeNum.ForeColor = Color.Black;
-                label10.ForeColor = Color.Black;
-                label8.ForeColor = Color.Black;
-                External.ForeColor = Color.Black;
-                ExternalNum.ForeColor = Color.Black;
-                label9.ForeColor = Color.Black;
-                label13.ForeColor = Color.Black;
-                Gestalt.ForeColor = Color.Black;
-                label14.ForeColor = Color.Black;
-                label15.ForeColor = Color.Black;
-                linkLabel2.LinkColor = Color.Black;
-                if (!File.Exists(Directory.GetCurrentDirectory() + "\\Dark.ini"))
-                {
-                    File.Create(Directory.GetCurrentDirectory() + "\\Dark.ini");
-                }
-                var FontConvert = new FontConverter();
-                File.WriteAllText(Directory.GetCurrentDirectory() + "\\Dark.ini","DarkDisable");
-            }
-        }
-        private void HexEdit_Click(object sender, EventArgs e)
-        {
-            HexEdit hex = new HexEdit();
-            hex.Show();
-        }
-        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("https://github.com/AnotherBugworm");
-        }
-        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("https://github.com/AnotherBugworm/Borderlands2Patcher");
-        }
-        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("https://www.twitch.tv/lightchaosman");
-        }
-        public void FontSet()
-        {
-            EridiumPickup.Font = fontDialog1.Font;
-            label2.Font = fontDialog1.Font;
-            OrigWepName.Font = fontDialog1.Font;
-            label4.Font = fontDialog1.Font;
-            NewWepName.Font = fontDialog1.Font;
-            label3.Font = fontDialog1.Font;
-            RedText.Font = fontDialog1.Font;
-            label12.Font = fontDialog1.Font;
-            Rarity.Font = fontDialog1.Font;
-            label5.Font = fontDialog1.Font;
-            FirinMode.Font = fontDialog1.Font;
-            label11.Font = fontDialog1.Font;
-            label6.Font = fontDialog1.Font;
-            Attribute.Font = fontDialog1.Font;
-            label7.Font = fontDialog1.Font;
-            AttributeNum.Font = fontDialog1.Font;
-            label10.Font = fontDialog1.Font;
-            label8.Font = fontDialog1.Font;
-            External.Font = fontDialog1.Font;
-            ExternalNum.Font = fontDialog1.Font;
-            label9.Font = fontDialog1.Font;
-            label13.Font = fontDialog1.Font;
-            Gestalt.Font = fontDialog1.Font;
-            label14.Font = fontDialog1.Font;
-            linkLabel1.Font = fontDialog1.Font;
-            label15.Font = fontDialog1.Font;
-            linkLabel2.Font = fontDialog1.Font;
-        }
-        public void DarkEnable()
-        {
-            this.BackColor = Color.Black;
-            General.BackColor = Color.Black;
-            WepCard.BackColor = Color.Black;
-            checkBox1.ForeColor = Color.White;
-            WepBarrel.BackColor = Color.Black;
-            Settings.BackColor = Color.Black;
-            About.BackColor = Color.Black;
-            EridiumPickup.ForeColor = Color.White;
-            label2.ForeColor = Color.White;
-            label4.ForeColor = Color.White;
-            label3.ForeColor = Color.White;
-            label12.ForeColor = Color.White;
-            label5.ForeColor = Color.White;
-            label11.ForeColor = Color.White;
-            label6.ForeColor = Color.White;
-            label7.ForeColor = Color.White;
-            label10.ForeColor = Color.White;
-            label8.ForeColor = Color.White;
-            label9.ForeColor = Color.White;
-            label13.ForeColor = Color.White;
-            label14.ForeColor = Color.White;
-            label15.ForeColor = Color.White;
-            linkLabel2.LinkColor = Color.White;
-            label18.ForeColor = Color.White;
-            label19.ForeColor = Color.White;
-            label21.ForeColor = Color.White;
-            label20.ForeColor = Color.White;
-            linkLabel3.LinkColor = Color.White;
-            linkLabel4.LinkColor = Color.White;
-            linkLabel5.LinkColor = Color.White;
-            checkBox2.ForeColor = Color.White;
         }
     }
 }

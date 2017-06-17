@@ -53,6 +53,8 @@
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
             this.WepBarrel = new System.Windows.Forms.TabPage();
+            this.Spinning = new System.Windows.Forms.ComboBox();
+            this.label22 = new System.Windows.Forms.Label();
             this.Zoom = new System.Windows.Forms.ComboBox();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label17 = new System.Windows.Forms.Label();
@@ -82,8 +84,6 @@
             this.OrigWepName = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.General = new System.Windows.Forms.TabPage();
-            this.EridiumPickup = new System.Windows.Forms.CheckBox();
             this.Tabs = new System.Windows.Forms.TabControl();
             this.About.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -93,7 +93,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.AttributeNum)).BeginInit();
             this.WepCard.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Rarity)).BeginInit();
-            this.General.SuspendLayout();
             this.Tabs.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -106,7 +105,7 @@
             this.NewButton.TabIndex = 0;
             this.NewButton.Text = "New Mod";
             this.NewButton.UseVisualStyleBackColor = true;
-            this.NewButton.Click += new System.EventHandler(this.button1_Click_1);
+            this.NewButton.Click += new System.EventHandler(this.Button1_Click_1);
             // 
             // NewFile
             // 
@@ -144,7 +143,7 @@
             this.About.Location = new System.Drawing.Point(4, 22);
             this.About.Name = "About";
             this.About.Padding = new System.Windows.Forms.Padding(3);
-            this.About.Size = new System.Drawing.Size(893, 429);
+            this.About.Size = new System.Drawing.Size(1742, 1624);
             this.About.TabIndex = 4;
             this.About.Text = "About";
             this.About.UseVisualStyleBackColor = true;
@@ -169,7 +168,7 @@
             this.linkLabel5.TabIndex = 9;
             this.linkLabel5.TabStop = true;
             this.linkLabel5.Text = "LightChaosman";
-            this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel5_LinkClicked);
+            this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel5_LinkClicked);
             // 
             // label20
             // 
@@ -191,7 +190,7 @@
             this.linkLabel4.TabIndex = 7;
             this.linkLabel4.TabStop = true;
             this.linkLabel4.Text = "Borderlands2Patcher";
-            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
+            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel4_LinkClicked);
             // 
             // label19
             // 
@@ -213,7 +212,7 @@
             this.linkLabel3.TabIndex = 5;
             this.linkLabel3.TabStop = true;
             this.linkLabel3.Text = "AnotherBugworm";
-            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
+            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel3_LinkClicked);
             // 
             // label18
             // 
@@ -235,7 +234,7 @@
             this.linkLabel2.TabIndex = 3;
             this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "Community Github";
-            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel2_LinkClicked);
             // 
             // label15
             // 
@@ -259,7 +258,7 @@
             this.linkLabel1.TabIndex = 1;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "FromDarkHell";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel1_LinkClicked);
             // 
             // label14
             // 
@@ -278,7 +277,7 @@
             this.Settings.Controls.Add(this.button1);
             this.Settings.Location = new System.Drawing.Point(4, 22);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(893, 429);
+            this.Settings.Size = new System.Drawing.Size(1742, 1624);
             this.Settings.TabIndex = 5;
             this.Settings.Text = "Settings";
             this.Settings.UseVisualStyleBackColor = true;
@@ -302,7 +301,7 @@
             this.checkBox1.TabIndex = 1;
             this.checkBox1.Text = "Dark Mode";
             this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
             // button1
             // 
@@ -312,10 +311,12 @@
             this.button1.TabIndex = 0;
             this.button1.Text = "Text Settings";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // WepBarrel
             // 
+            this.WepBarrel.Controls.Add(this.Spinning);
+            this.WepBarrel.Controls.Add(this.label22);
             this.WepBarrel.Controls.Add(this.Zoom);
             this.WepBarrel.Controls.Add(this.numericUpDown1);
             this.WepBarrel.Controls.Add(this.label17);
@@ -338,10 +339,30 @@
             this.WepBarrel.Controls.Add(this.label5);
             this.WepBarrel.Location = new System.Drawing.Point(4, 22);
             this.WepBarrel.Name = "WepBarrel";
-            this.WepBarrel.Size = new System.Drawing.Size(893, 429);
+            this.WepBarrel.Size = new System.Drawing.Size(1742, 1624);
             this.WepBarrel.TabIndex = 2;
             this.WepBarrel.Text = "Weapon Barrel";
             this.WepBarrel.UseVisualStyleBackColor = true;
+            // 
+            // Spinning
+            // 
+            this.Spinning.FormattingEnabled = true;
+            this.Spinning.Items.AddRange(new object[] {
+            "Yes",
+            "No"});
+            this.Spinning.Location = new System.Drawing.Point(112, 391);
+            this.Spinning.Name = "Spinning";
+            this.Spinning.Size = new System.Drawing.Size(121, 21);
+            this.Spinning.TabIndex = 25;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(13, 399);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(93, 13);
+            this.label22.TabIndex = 24;
+            this.label22.Text = "Spinning Enabled:";
             // 
             // Zoom
             // 
@@ -357,15 +378,16 @@
             "Shot Cost",
             "Extra Shot Chance",
             "Weapon Accuracy",
-            "Reload Speed"});
-            this.Zoom.Location = new System.Drawing.Point(198, 103);
+            "Reload Speed",
+            "Convert Damage to Healing Percent"});
+            this.Zoom.Location = new System.Drawing.Point(201, 95);
             this.Zoom.Name = "Zoom";
             this.Zoom.Size = new System.Drawing.Size(121, 21);
             this.Zoom.TabIndex = 23;
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(349, 104);
+            this.numericUpDown1.Location = new System.Drawing.Point(349, 98);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             268435456,
             1042612833,
@@ -383,7 +405,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(325, 107);
+            this.label17.Location = new System.Drawing.Point(325, 99);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(18, 13);
             this.label17.TabIndex = 21;
@@ -392,7 +414,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(123, 107);
+            this.label16.Location = new System.Drawing.Point(126, 103);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(69, 13);
             this.label16.TabIndex = 19;
@@ -401,7 +423,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 107);
+            this.label1.Location = new System.Drawing.Point(10, 103);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(115, 13);
             this.label1.TabIndex = 18;
@@ -410,7 +432,7 @@
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(13, 175);
+            this.checkBox2.Location = new System.Drawing.Point(11, 176);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(137, 17);
             this.checkBox2.TabIndex = 17;
@@ -421,31 +443,31 @@
             // 
             this.Gestalt.FormattingEnabled = true;
             this.Gestalt.Items.AddRange(new object[] {
-            "GD_Weap_AssaultRifle.Barrel.AR_Barrel_Bandit",
-            "GD_Weap_AssaultRifle.Barrel.AR_Barrel_Dahl",
-            "GD_Weap_AssaultRifle.Barrel.AR_Barrel_Vladof",
-            "GD_Weap_Launchers.Barrel.L_Barrel_Bandit",
-            "GD_Weap_Launchers.Barrel.L_Barrel_Maliwan",
-            "GD_Weap_Launchers.Barrel.L_Barrel_Tediore",
-            "GD_Weap_Launchers.Barrel.L_Barrel_Torgue",
-            "GD_Weap_Launchers.Barrel.L_Barrel_Vladof",
-            "GD_Weap_Pistol.Barrel.Pistol_Barrel_Bandit",
-            "GD_Weap_Pistol.Barrel.Pistol_Barrel_Dahl",
-            "GD_Weap_Pistol.Barrel.Pistol_Barrel_Maliwan",
-            "GD_Weap_Pistol.Barrel.Pistol_Barrel_Tediore",
-            "GD_Weap_Pistol.Barrel.Pistol_Barrel_Torgue",
-            "GD_Weap_Shotgun.Barrel.SG_Barrel_Hyperion",
-            "GD_Weap_Shotgun.Barrel.SG_Barrel_Jakobs",
-            "GD_Weap_Shotgun.Barrel.SG_Barrel_Tediore",
-            "GD_Weap_SMG.Barrel.SMG_Barrel_Maliwan",
-            "GD_Weap_SMG.Barrel.SMG_Barrel_Bandit",
-            "GD_Weap_SMG.Barrel.SMG_Barrel_Tediore",
-            "GD_Weap_SniperRifles.Barrel.SR_Barrel_Dahl",
-            "GD_Weap_SniperRifles.Barrel.SR_Barrel_Hyperion",
-            "GD_Weap_SniperRifles.Barrel.SR_Barrel_Jakobs",
-            "GD_Weap_SniperRifles.Barrel.SR_Barrel_Maliwan",
-            "GD_Weap_SniperRifles.Barrel.SR_Barrel_Vladof"});
-            this.Gestalt.Location = new System.Drawing.Point(129, 136);
+            "AR_Barrel_Bandit",
+            "AR_Barrel_Dahl",
+            "AR_Barrel_Vladof",
+            "L_Barrel_Bandit",
+            "L_Barrel_Maliwan",
+            "L_Barrel_Tediore",
+            "L_Barrel_Torgue",
+            "L_Barrel_Vladof",
+            "Pistol_Barrel_Bandit",
+            "Pistol_Barrel_Dahl",
+            "Pistol_Barrel_Maliwan",
+            "Pistol_Barrel_Tediore",
+            "Pistol_Barrel_Torgue",
+            "SG_Barrel_Hyperion",
+            "SG_Barrel_Jakobs",
+            "SG_Barrel_Tediore",
+            "SMG_Barrel_Maliwan",
+            "SMG_Barrel_Bandit",
+            "SMG_Barrel_Tediore",
+            "Barrel.SR_Barrel_Dahl",
+            "Barrel.SR_Barrel_Hyperion",
+            "Barrel.SR_Barrel_Jakobs",
+            "Barrel.SR_Barrel_Maliwan",
+            "Barrel.SR_Barrel_Vladof"});
+            this.Gestalt.Location = new System.Drawing.Point(129, 355);
             this.Gestalt.Name = "Gestalt";
             this.Gestalt.Size = new System.Drawing.Size(747, 21);
             this.Gestalt.TabIndex = 16;
@@ -453,7 +475,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(10, 144);
+            this.label13.Location = new System.Drawing.Point(10, 363);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(113, 13);
             this.label13.TabIndex = 15;
@@ -747,7 +769,7 @@
             this.WepCard.Location = new System.Drawing.Point(4, 22);
             this.WepCard.Name = "WepCard";
             this.WepCard.Padding = new System.Windows.Forms.Padding(3);
-            this.WepCard.Size = new System.Drawing.Size(893, 429);
+            this.WepCard.Size = new System.Drawing.Size(1742, 1624);
             this.WepCard.TabIndex = 1;
             this.WepCard.Text = "Weapon Card";
             this.WepCard.UseVisualStyleBackColor = true;
@@ -847,11 +869,9 @@
             "Little Evie",
             "Morning Star",
             "Octo",
-            "Order",
             "Orphan Maker",
             "Pimpernel",
             "Pocket Rocket",
-            "Pot O\' Gold",
             "Rapier",
             "Rex",
             "Roaster",
@@ -931,38 +951,16 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Weapon Name:";
             // 
-            // General
-            // 
-            this.General.Controls.Add(this.EridiumPickup);
-            this.General.ImageIndex = 0;
-            this.General.Location = new System.Drawing.Point(4, 22);
-            this.General.Name = "General";
-            this.General.Size = new System.Drawing.Size(893, 429);
-            this.General.TabIndex = 0;
-            this.General.Text = "General";
-            this.General.UseVisualStyleBackColor = true;
-            // 
-            // EridiumPickup
-            // 
-            this.EridiumPickup.AutoSize = true;
-            this.EridiumPickup.Location = new System.Drawing.Point(3, 16);
-            this.EridiumPickup.Name = "EridiumPickup";
-            this.EridiumPickup.Size = new System.Drawing.Size(269, 17);
-            this.EridiumPickup.TabIndex = 1;
-            this.EridiumPickup.Text = "Auto Eridium, Torgue Token, Seraph Crystal Pickup";
-            this.EridiumPickup.UseVisualStyleBackColor = true;
-            // 
             // Tabs
             // 
-            this.Tabs.Controls.Add(this.General);
+            this.Tabs.Controls.Add(this.About);
             this.Tabs.Controls.Add(this.WepCard);
             this.Tabs.Controls.Add(this.WepBarrel);
             this.Tabs.Controls.Add(this.Settings);
-            this.Tabs.Controls.Add(this.About);
-            this.Tabs.Location = new System.Drawing.Point(0, 30);
+            this.Tabs.Location = new System.Drawing.Point(1, 30);
             this.Tabs.Name = "Tabs";
             this.Tabs.SelectedIndex = 0;
-            this.Tabs.Size = new System.Drawing.Size(901, 455);
+            this.Tabs.Size = new System.Drawing.Size(1750, 1650);
             this.Tabs.TabIndex = 2;
             // 
             // Form1
@@ -977,6 +975,7 @@
             this.Name = "Form1";
             this.Text = "BL2CPF";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.About.ResumeLayout(false);
             this.About.PerformLayout();
             this.Settings.ResumeLayout(false);
@@ -989,8 +988,6 @@
             this.WepCard.ResumeLayout(false);
             this.WepCard.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Rarity)).EndInit();
-            this.General.ResumeLayout(false);
-            this.General.PerformLayout();
             this.Tabs.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -1041,8 +1038,6 @@
         private System.Windows.Forms.ComboBox OrigWepName;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TabPage General;
-        private System.Windows.Forms.CheckBox EridiumPickup;
         private System.Windows.Forms.TabControl Tabs;
         private System.Windows.Forms.ComboBox Zoom;
         private System.Windows.Forms.Button HexEdit;
@@ -1053,6 +1048,8 @@
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.LinkLabel linkLabel5;
         private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.ComboBox Spinning;
+        private System.Windows.Forms.Label label22;
     }
 }
 
